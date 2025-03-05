@@ -7,7 +7,7 @@ import time
 from datetime import datetime
 
 
-cService = webdriver.ChromeService(executable_path=r'C:\Users\jai\Desktop\DBTT\chromedriver-win64\chromedriver-win64\chromedriver.exe')
+cService = webdriver.ChromeService(executable_path=r'C:\Users\jai\Desktop\DBTT\DBTT\chromedriver-win64\chromedriver-win64\chromedriver.exe')
 driver = webdriver.Chrome(service=cService)
 
 driver.get('https://www.cathaycineplexes.com.sg/ticketing/1114/5797')

@@ -12,7 +12,7 @@ from datetime import datetime
 def getallmovies():
 
     #havent tested if relative path works, yall use ur own path bah
-    cService = webdriver.ChromeService(executable_path=r'C:\Users\jai\Desktop\DBTT\chromedriver-win64\chromedriver-win64\chromedriver.exe')
+    cService = webdriver.ChromeService(executable_path=r'C:\Users\jai\Desktop\DBTT\DBTT\chromedriver-win64\chromedriver-win64\chromedriver.exe')
     driver = webdriver.Chrome(service=cService)
 
     driver.get('https://www.cathaycineplexes.com.sg/')
