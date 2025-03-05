@@ -14,14 +14,18 @@ movie_timings = [{'location': 'JEM', 'movie_name': 'Close-Ur-Kopitiam-PG13', 'ti
 from datetime import datetime, timedelta
 
 def check_and_open_movie_timing():
-    now = datetime.now()
+    now = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
     for movie in movie_timings:
-        movie_timing = datetime.fromisoformat(movie['timing'])
-        if abs((movie_timing - now).total_seconds()) <= 300:
+        movie_timing = movie['timing']
+        if movie_timing == now:
             print(f"Movie '{movie['movie_name']}' is showing now. Opening the movie link...")
-            return movie['href']
+            href_to_open = movie['href']
+            #need remove else it keeps calling zz
+            movie_timings.remove(movie) 
+            return href_to_open
     print('no movie')
     return None
+
 
 
 def get_details():
