@@ -40,13 +40,24 @@ def obtain_all_moviedates():
                 timing = params[2].strip("'")  
                 href = link.get_attribute("href")  
 
+                genre = driver.find_element(By.XPATH, "//div[contains(text(),'GENRE')]/following-sibling::div").text
+                language = driver.find_element(By.XPATH, "//div[contains(text(),'LANGUAGE')]/following-sibling::div").text
+                rating = driver.find_element(By.XPATH, "//div[contains(text(),'RATING')]/following-sibling::div").text
+                runtime = driver.find_element(By.XPATH, "//div[contains(text(),'RUNTIME')]/following-sibling::div").text
+                opening = driver.find_element(By.XPATH, "//div[contains(text(),'OPENING')]/following-sibling::div").text
+
                 timing_datetime = datetime.fromisoformat(timing)
                 if timing_datetime.date() == current_date:
                     showtimes_list.append({
                         "location": location,
                         "movie_name": movie_name,
                         "timing": timing,
-                        "href": href
+                        "href": href,
+                        "genre": genre,
+                        "language": language,
+                        "rating": rating,
+                        "runtime": runtime,
+                        "opening": opening
                 })
 
         showtimes_list.sort(key=lambda x: datetime.fromisoformat(x['timing']))
