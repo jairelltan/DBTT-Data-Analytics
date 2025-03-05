@@ -63,7 +63,7 @@ def get_details():
             occupied_total_count = 0
             not_occupied_total_count = 0
 
-            # URLs for different seat types
+            # URLs for different seat types. I found out this is the easiest way to find all the seats (the status method doesnt work)
             regular_seat_url = "https://www.cathaycineplexes.com.sg/images/single-seat.png"
             regular_seat_sold_url = "https://www.cathaycineplexes.com.sg/images/single-seat-sold.png"
 
