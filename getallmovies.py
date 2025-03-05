@@ -8,7 +8,7 @@ from datetime import datetime
 
 # Obtain all links from each of the movies from the cathay main page
 # Accepts no parameters
-# Returns a list of all links to each movie page individually.
+# Returns an array of all links to each movie page individually.
 def getallmovies():
 
     #havent tested if relative path works, yall use ur own path bah

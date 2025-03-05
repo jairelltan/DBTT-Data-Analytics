@@ -9,8 +9,8 @@ from getallmovies import getallmovies
 
  # Obtain all links to each of the available movies timings for each movie.
  # Accepts no parameters
- # Returns a list of all links to each movie timings for all movies for that day itself. Ideally sorted by chronological order
-def obtain_all_moviedates():
+ # Returns an array of all movie screenings on the day itself. Each object consist of location, moviename, timing, href, genre, language, rating, runtime, opening
+def obtain_all_movietimings():
 
     movielist = getallmovies()
     print(movielist)
@@ -47,6 +47,8 @@ def obtain_all_moviedates():
                 opening = driver.find_element(By.XPATH, "//div[contains(text(),'OPENING')]/following-sibling::div").text
 
                 timing_datetime = datetime.fromisoformat(timing)
+
+                #yes technically this can be placed above but i thought of limiting it to only one day later
                 if timing_datetime.date() == current_date:
                     showtimes_list.append({
                         "location": location,
@@ -63,5 +65,3 @@ def obtain_all_moviedates():
         showtimes_list.sort(key=lambda x: datetime.fromisoformat(x['timing']))
         driver.quit()
     return showtimes_list
-
-print(obtain_all_moviedates())
