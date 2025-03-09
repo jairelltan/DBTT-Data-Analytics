@@ -3,6 +3,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
+from selenium.common.exceptions import WebDriverException
 import time
 import os
 import csv
@@ -56,98 +57,109 @@ def get_details():
     
         # if a movie is found in the time interval, open it and count the stuff. you can get the other non seat data by calling movie['location'] etc.
         if movie:
-            cService = webdriver.ChromeService(executable_path=r'C:\Users\jai\Desktop\DBTT\DBTT\chromedriver-win64\chromedriver-win64\chromedriver.exe')
-            driver = webdriver.Chrome(service=cService)
+            try:
+                # Setup WebDriver with error handling
+                cService = webdriver.ChromeService(executable_path=r'C:\Users\jai\Desktop\DBTT\DBTT\chromedriver-win64\chromedriver-win64\chromedriver.exe')
+                driver = webdriver.Chrome(service=cService)
 
-            driver.get(movie['href'])
-
-            seats = driver.find_elements(By.CLASS_NAME, 'cell')
-
-            occupied_regular_count = 0
-            not_occupied_regular_count = 0
-
-            occupied_couple_count = 0
-            not_occupied_couple_count = 0
-
-            occupied_wheelchair_count = 0
-            not_occupied_wheelchair_count = 0
-
-            occupied_wave_count = 0
-            not_occupied_wave_count = 0
-
-            occupied_total_count = 0
-            not_occupied_total_count = 0
-
-            # URLs for different seat types. I found out this is the easiest way to find all the seats (the status method doesnt work)
-            regular_seat_url = "https://www.cathaycineplexes.com.sg/images/single-seat.png"
-            regular_seat_sold_url = "https://www.cathaycineplexes.com.sg/images/single-seat-sold.png"
-
-            couple_left_url = "https://www.cathaycineplexes.com.sg/images/couple-left.png"
-            couple_right_url = "https://www.cathaycineplexes.com.sg/images/couple-right.png"
-            couple_left_sold_url = "https://www.cathaycineplexes.com.sg/images/couple-left-sold.png"
-            couple_right_sold_url = "https://www.cathaycineplexes.com.sg/images/couple-right-sold.png"
-
-            wheelchair_url = "https://www.cathaycineplexes.com.sg/images/wheelchair.png"
-            wheelchair_sold_url = "https://www.cathaycineplexes.com.sg/images/wheelchair-sold.png"
-
-            #niche ones
-            wave_left_url = "https://www.cathaycineplexes.com.sg/images/w-left.png"
-            wave_right_url = "https://www.cathaycineplexes.com.sg/images/w-right.png"
-            wave_left_sold_url = "https://www.cathaycineplexes.com.sg/images/w-left-sold.png"
-            wave_right_sold_url = "https://www.cathaycineplexes.com.sg/images/w-right-sold.png"
+                # Try to access the movie URL
+                try:
+                    driver.get(movie['href'])
+                except WebDriverException as e:
+                    print(f"Failed to open {movie['href']} due to error: {e}")
+                    driver.quit()
+                    continue  # Skip to the next movie
 
 
-            for seat in seats:
-                style = seat.get_attribute('style')  
-                # status = seat.get_attribute('status')  
-                
-                # Check the background image URL and status for each seat type
-                if regular_seat_url in style:
-                    not_occupied_regular_count += 1
-                    not_occupied_total_count += 1
-                elif regular_seat_sold_url in style:
-                    occupied_regular_count += 1
-                    occupied_total_count += 1
+                seats = driver.find_elements(By.CLASS_NAME, 'cell')
 
-                elif couple_left_url in style or couple_right_url in style:
-                    not_occupied_couple_count += 1
-                    not_occupied_total_count += 1
-                elif couple_left_sold_url in style or couple_right_sold_url in style:
-                    occupied_couple_count += 1
-                    occupied_total_count += 1
+                occupied_regular_count = 0
+                not_occupied_regular_count = 0
 
-                elif wheelchair_url in style:
-                    not_occupied_wheelchair_count += 1
-                    not_occupied_total_count += 1
-                elif wheelchair_sold_url in style:
-                    occupied_wheelchair_count += 1
-                    occupied_total_count += 1
+                occupied_couple_count = 0
+                not_occupied_couple_count = 0
 
-                #Niche Ones
-                elif wave_right_url in style or wave_left_url in style:
-                    not_occupied_wave_count += 1
-                    not_occupied_total_count += 1
-                elif wave_left_sold_url in style or wave_right_sold_url in style:
-                    occupied_wave_count += 1
-                    occupied_total_count += 1
+                occupied_wheelchair_count = 0
+                not_occupied_wheelchair_count = 0
+
+                occupied_wave_count = 0
+                not_occupied_wave_count = 0
+
+                occupied_total_count = 0
+                not_occupied_total_count = 0
+
+                # URLs for different seat types. I found out this is the easiest way to find all the seats (the status method doesnt work)
+                regular_seat_url = "https://www.cathaycineplexes.com.sg/images/single-seat.png"
+                regular_seat_sold_url = "https://www.cathaycineplexes.com.sg/images/single-seat-sold.png"
+
+                couple_left_url = "https://www.cathaycineplexes.com.sg/images/couple-left.png"
+                couple_right_url = "https://www.cathaycineplexes.com.sg/images/couple-right.png"
+                couple_left_sold_url = "https://www.cathaycineplexes.com.sg/images/couple-left-sold.png"
+                couple_right_sold_url = "https://www.cathaycineplexes.com.sg/images/couple-right-sold.png"
+
+                wheelchair_url = "https://www.cathaycineplexes.com.sg/images/wheelchair.png"
+                wheelchair_sold_url = "https://www.cathaycineplexes.com.sg/images/wheelchair-sold.png"
+
+                #niche ones
+                wave_left_url = "https://www.cathaycineplexes.com.sg/images/w-left.png"
+                wave_right_url = "https://www.cathaycineplexes.com.sg/images/w-right.png"
+                wave_left_sold_url = "https://www.cathaycineplexes.com.sg/images/w-left-sold.png"
+                wave_right_sold_url = "https://www.cathaycineplexes.com.sg/images/w-right-sold.png"
 
 
-            with open(csv_file, mode='a', newline='', encoding='utf-8') as file:
-                writer = csv.writer(file)
-                writer.writerow([
-                    movie["location"], movie["movie_name"], movie["timing"], movie["href"],
-                    movie["genre"], movie["language"], movie["rating"], movie["runtime"], movie["opening"],
-                    occupied_regular_count, not_occupied_regular_count,
-                    occupied_couple_count, not_occupied_couple_count,
-                    occupied_wheelchair_count, not_occupied_wheelchair_count,
-                    occupied_wave_count, not_occupied_wave_count,
-                    occupied_total_count, not_occupied_total_count
-                ])
+                for seat in seats:
+                    style = seat.get_attribute('style')  
+                    # status = seat.get_attribute('status')  
+                    
+                    # Check the background image URL and status for each seat type
+                    if regular_seat_url in style:
+                        not_occupied_regular_count += 1
+                        not_occupied_total_count += 1
+                    elif regular_seat_sold_url in style:
+                        occupied_regular_count += 1
+                        occupied_total_count += 1
 
-            print(f"Data for {movie['movie_name']} saved to {csv_file}.")
+                    elif couple_left_url in style or couple_right_url in style:
+                        not_occupied_couple_count += 1
+                        not_occupied_total_count += 1
+                    elif couple_left_sold_url in style or couple_right_sold_url in style:
+                        occupied_couple_count += 1
+                        occupied_total_count += 1
 
-            #Close the browser window
-            driver.quit()
+                    elif wheelchair_url in style:
+                        not_occupied_wheelchair_count += 1
+                        not_occupied_total_count += 1
+                    elif wheelchair_sold_url in style:
+                        occupied_wheelchair_count += 1
+                        occupied_total_count += 1
+
+                    #Niche Ones
+                    elif wave_right_url in style or wave_left_url in style:
+                        not_occupied_wave_count += 1
+                        not_occupied_total_count += 1
+                    elif wave_left_sold_url in style or wave_right_sold_url in style:
+                        occupied_wave_count += 1
+                        occupied_total_count += 1
+
+
+                with open(csv_file, mode='a', newline='', encoding='utf-8') as file:
+                    writer = csv.writer(file)
+                    writer.writerow([
+                        movie["location"], movie["movie_name"], movie["timing"], movie["href"],
+                        movie["genre"], movie["language"], movie["rating"], movie["runtime"], movie["opening"],
+                        occupied_regular_count, not_occupied_regular_count,
+                        occupied_couple_count, not_occupied_couple_count,
+                        occupied_wheelchair_count, not_occupied_wheelchair_count,
+                        occupied_wave_count, not_occupied_wave_count,
+                        occupied_total_count, not_occupied_total_count
+                    ])
+
+                print(f"Data for {movie['movie_name']} saved to {csv_file}.")
+                driver.quit()
+
+            except WebDriverException as e:
+                print(f"An error occurred with WebDriver: {e}")
+                continue  
 
         #check every 30 seconds
         time.sleep(30)
