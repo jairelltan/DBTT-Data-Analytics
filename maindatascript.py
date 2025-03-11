@@ -45,7 +45,7 @@ def get_details():
                 "Occupied Couple", "Not Occupied Couple",
                 "Occupied Wheelchair", "Not Occupied Wheelchair",
                 "Occupied Wave", "Not Occupied Wave",
-                "Total Occupied", "Total Not Occupied"
+                "Total Occupied", "Total Not Occupied", "Occupancy Rate"
             ])
 
     while True:
@@ -89,6 +89,7 @@ def get_details():
                 not_occupied_total_count = 0
 
                 is_premium = False
+                occupancy_rate = 0
 
                 # URLs for different seat types. I found out this is the easiest way to find all the seats (the status method doesnt work)
                 regular_seat_url = "https://www.cathaycineplexes.com.sg/images/single-seat.png"
@@ -146,6 +147,8 @@ def get_details():
                 if (occupied_total_count + not_occupied_total_count) <= 30:
                     is_premium = True
 
+                occupancy_rate = round(occupied_total_count/(occupied_total_count + not_occupied_total_count),2)
+
                 with open(csv_file, mode='a', newline='', encoding='utf-8') as file:
                     writer = csv.writer(file)
                     writer.writerow([
@@ -155,7 +158,7 @@ def get_details():
                         occupied_couple_count, not_occupied_couple_count,
                         occupied_wheelchair_count, not_occupied_wheelchair_count,
                         occupied_wave_count, not_occupied_wave_count,
-                        occupied_total_count, not_occupied_total_count
+                        occupied_total_count, not_occupied_total_count, occupancy_rate
                     ])
 
                 print(f"Data for {movie['movie_name']} saved to {csv_file}.")
