@@ -39,13 +39,13 @@ def get_details():
         with open(csv_file, mode='w', newline='', encoding='utf-8') as file:
             writer = csv.writer(file)
             writer.writerow([
-                "Location", "Movie Name", "Timing", "Href", 
+                "Location", "Movie Name", "Timing", "Is Premium", "Href", 
                 "Genre", "Language", "Rating", "Runtime", "Opening",
                 "Occupied Regular", "Not Occupied Regular",
                 "Occupied Couple", "Not Occupied Couple",
                 "Occupied Wheelchair", "Not Occupied Wheelchair",
                 "Occupied Wave", "Not Occupied Wave",
-                "Total Occupied", "Total Not Occupied"
+                "Total Occupied", "Total Not Occupied", "Occupancy Rate"
             ])
 
     while True:
@@ -87,6 +87,9 @@ def get_details():
 
                 occupied_total_count = 0
                 not_occupied_total_count = 0
+
+                is_premium = False
+                occupancy_rate = 0
 
                 # URLs for different seat types. I found out this is the easiest way to find all the seats (the status method doesnt work)
                 regular_seat_url = "https://www.cathaycineplexes.com.sg/images/single-seat.png"
@@ -141,17 +144,21 @@ def get_details():
                         occupied_wave_count += 1
                         occupied_total_count += 1
 
+                if (occupied_total_count + not_occupied_total_count) <= 30:
+                    is_premium = True
+
+                occupancy_rate = round(occupied_total_count/(occupied_total_count + not_occupied_total_count),2)
 
                 with open(csv_file, mode='a', newline='', encoding='utf-8') as file:
                     writer = csv.writer(file)
                     writer.writerow([
-                        movie["location"], movie["movie_name"], movie["timing"], movie["href"],
+                        movie["location"], movie["movie_name"], movie["timing"], is_premium, movie["href"],
                         movie["genre"], movie["language"], movie["rating"], movie["runtime"], movie["opening"],
                         occupied_regular_count, not_occupied_regular_count,
                         occupied_couple_count, not_occupied_couple_count,
                         occupied_wheelchair_count, not_occupied_wheelchair_count,
                         occupied_wave_count, not_occupied_wave_count,
-                        occupied_total_count, not_occupied_total_count
+                        occupied_total_count, not_occupied_total_count, occupancy_rate
                     ])
 
                 print(f"Data for {movie['movie_name']} saved to {csv_file}.")
