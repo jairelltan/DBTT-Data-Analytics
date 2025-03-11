@@ -39,7 +39,7 @@ def get_details():
         with open(csv_file, mode='w', newline='', encoding='utf-8') as file:
             writer = csv.writer(file)
             writer.writerow([
-                "Location", "Movie Name", "Timing", "Href", 
+                "Location", "Movie Name", "Timing", "Is Premium", "Href", 
                 "Genre", "Language", "Rating", "Runtime", "Opening",
                 "Occupied Regular", "Not Occupied Regular",
                 "Occupied Couple", "Not Occupied Couple",
@@ -87,6 +87,8 @@ def get_details():
 
                 occupied_total_count = 0
                 not_occupied_total_count = 0
+
+                is_premium = False
 
                 # URLs for different seat types. I found out this is the easiest way to find all the seats (the status method doesnt work)
                 regular_seat_url = "https://www.cathaycineplexes.com.sg/images/single-seat.png"
@@ -141,11 +143,13 @@ def get_details():
                         occupied_wave_count += 1
                         occupied_total_count += 1
 
+                if (occupied_total_count + not_occupied_total_count) <= 30:
+                    is_premium = True
 
                 with open(csv_file, mode='a', newline='', encoding='utf-8') as file:
                     writer = csv.writer(file)
                     writer.writerow([
-                        movie["location"], movie["movie_name"], movie["timing"], movie["href"],
+                        movie["location"], movie["movie_name"], movie["timing"], is_premium, movie["href"],
                         movie["genre"], movie["language"], movie["rating"], movie["runtime"], movie["opening"],
                         occupied_regular_count, not_occupied_regular_count,
                         occupied_couple_count, not_occupied_couple_count,
